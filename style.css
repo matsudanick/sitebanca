@@ -1,0 +1,32 @@
+/* Define a fonte Inter como padrão */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Melhora a aparência da barra de rolagem (opcional, mas elegante) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #2d3748; /* gray-800 */
+}
+::-webkit-scrollbar-thumb {
+    background: #4a5568; /* gray-600 */
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #718096; /* gray-500 */
+}
+
+/* Remove as setas do input de número (para navegadores Chrome/Safari) */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove as setas do input de número (para Firefox) */
+input[type='number'] {
+    -moz-appearance: textfield;
+}

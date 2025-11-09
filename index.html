@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Juros Compostos - Banca</title>
+    <!-- Carrega o Tailwind CSS (necessário para as classes no HTML) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Link para o arquivo CSS externo -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Card Principal -->
+    <div class="w-full max-w-5xl bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-700">
+        
+        <!-- Cabeçalho -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Simulador de Banca</h1>
+            <p class="text-lg text-gray-400">Projete seus ganhos com juros compostos por sessão.</p>
+        </div>
+
+        <!-- Formulário de Inputs -->
+        <form id="simuladorForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            
+            <!-- Input: Banca Inicial -->
+            <div>
+                <label for="bancaInicial" class="block text-sm font-medium text-gray-300 mb-2">Banca Inicial (R$)</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">R$</span>
+                    <input type="number" id="bancaInicial" value="100" min="1" step="any"
+                           class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Ex: 100">
+                </div>
+            </div>
+
+            <!-- Input: Sessões por Dia -->
+            <div>
+                <label for="sessoesPorDia" class="block text-sm font-medium text-gray-300 mb-2">Sessões por Dia</label>
+                <input type="number" id="sessoesPorDia" value="3" min="1"
+                       class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                       placeholder="Ex: 3">
+            </div>
+
+            <!-- Input: Duração -->
+            <div class="flex items-end gap-4">
+                <div class="flex-grow">
+                    <label for="duracao" class="block text-sm font-medium text-gray-300 mb-2">Duração</label>
+                    <input type="number" id="duracao" value="30" min="1"
+                           class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Ex: 30">
+                </div>
+                
+                <!-- Input: Tipo de Período -->
+                <div class="flex-shrink-0">
+                    <select id="tipoPeriodo"
+                            class="w-full h-[50px] bg-gray-700 border border-gray-600 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="dias">Dias</option>
+                        <option value="meses">Meses</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Info: Taxa Fixa -->
+            <div class="flex items-center justify-center bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                <span class="text-lg font-medium text-white">Taxa por Sessão: <span class="font-bold text-blue-400">5% (Fixo)</span></span>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <button type="submit" id="btnCalcular"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+                    Calcular Projeção
+                </button>
+                <button type="button" id="btnLimpar"
+                        class="w-full bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+                    Limpar
+                </button>
+            </div>
+        </form>
+
+        <!-- Área de Resultados (Oculta por padrão) -->
+        <div id="resultadoArea" class="hidden">
+            
+            <!-- Resumo dos Ganhos -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-4 text-center">Resumo da Simulação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <p class="text-sm font-medium text-gray-400 mb-1">Banca Inicial</p>
+                        <p id="resBancaInicial" class="text-2xl font-bold text-white">-</p>
+                    </div>
+                    
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <p class="text-sm font-medium text-gray-400 mb-1">Lucro Total</p>
+                        <p id="resLucroTotal" class="text-2xl font-bold text-green-400">-</p>
+                    </div>
+
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <p class="text-sm font-medium text-gray-400 mb-1">Banca Final</p>
+                        <p id="resBancaFinal" class="text-2xl font-bold text-blue-400">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalhes Dia a Dia (Tabela) -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4 text-center">Detalhes Sessão por Sessão</h3>
+                <!-- Container da Tabela com Rolagem -->
+                <div class="max-h-[500px] overflow-y-auto overflow-x-auto rounded-lg border border-gray-700 shadow-md">
+                    <table class="w-full min-w-[700px] text-left">
+                        <thead class="bg-gray-700 sticky top-0 z-10">
+                            <tr>
+                                <th class="p-3 text-sm font-semibold text-gray-300">Dia</th>
+                                <th class="p-3 text-sm font-semibold text-gray-300">Sessão</th>
+                                <th class="p-3 text-sm font-semibold text-gray-300">Banca Inicial</th>
+                                <th class="p-3 text-sm font-semibold text-gray-300">Meta (5%)</th>
+                                <th class="p-3 text-sm font-semibold text-gray-300">Banca Final</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaResultados" class="bg-gray-800 divide-y divide-gray-700">
+                            <!-- Linhas serão injetadas pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link para o arquivo JavaScript externo -->
+    <script src="script.js"></script>
+</body>
+</html>

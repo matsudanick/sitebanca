@@ -14,32 +14,16 @@ body {
     font-family: 'Orbitron', sans-serif;
 }
 
-/* Otimização de Scroll para Mobile */
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+/* Scrollbars */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Custom Scrollbar para tabelas */
-::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-}
-::-webkit-scrollbar-track {
-    background: #09090b;
-}
-::-webkit-scrollbar-thumb {
-    background: #27272a;
-    border-radius: 10px;
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
 
-/* Estilo dos Botões de Aba */
-.tab-btn {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* Tabs */
+.tab-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .tab-btn.active {
     background-color: #18181b;
     border-color: #dc2626;
@@ -47,26 +31,28 @@ body {
     box-shadow: 0 4px 20px -5px rgba(220, 38, 38, 0.25);
     transform: translateY(-2px);
 }
-.tab-btn.active i { color: #ef4444; }
 
-/* Animações de Entrada */
+/* Animações */
 @keyframes slideRight { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes slideLeft { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
 .animate-slide-right { animation: slideRight 0.5s ease-out forwards; }
 .animate-slide-left { animation: slideLeft 0.5s ease-out forwards; }
 .animate-fade-in-down { animation: fadeInDown 0.6s ease-out forwards; }
 .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-
 .animate-pulse-slow { animation: pulse 8s infinite; }
 
-/* Background Effects */
+@keyframes pulse { 
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.2); }
+}
+
+/* Visuals */
 .grid-background {
     background-image: linear-gradient(rgba(50, 50, 50, 0.5) 1px, transparent 1px),
     linear-gradient(90deg, rgba(50, 50, 50, 0.5) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-size: 50px 50px;
 }
 .red-glow {
     position: absolute;

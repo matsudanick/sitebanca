@@ -3,201 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Banca Premium</title>
+    <title>Simulador de Banca & Estratégias Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-black text-gray-100 min-h-screen relative overflow-x-hidden">
     
-    <!-- Background animated grid -->
     <div class="fixed inset-0 pointer-events-none">
         <div class="absolute inset-0 bg-gradient-to-br from-black via-red-950/5 to-black"></div>
         <div class="grid-background"></div>
         <div class="red-glow red-glow-1"></div>
         <div class="red-glow red-glow-2"></div>
-        <div class="red-glow red-glow-3"></div>
     </div>
 
-    <div class="relative z-10 flex items-center justify-center min-h-screen p-4 py-12">
+    <div class="relative z-10 flex flex-col items-center min-h-screen p-4 py-12">
         <div class="w-full max-w-6xl">
             
-            <!-- Header -->
             <div class="text-center mb-12 animate-fade-in-down">
-                <div class="inline-block mb-4">
-                    <div class="relative">
-                        <h1 class="text-5xl md:text-6xl font-bold text-white mb-2 title-glow" style="font-family: 'Orbitron', sans-serif;">
-                            SIMULADOR DE BANCA
-                        </h1>
-                        <div class="h-1 w-full bg-gradient-to-r from-transparent via-red-600 to-transparent mt-4 animate-pulse-slow"></div>
-                    </div>
-                </div>
-                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
-                    Projete seus ganhos com <span class="text-red-500 font-semibold">juros compostos</span> por sessão
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-2 title-glow" style="font-family: 'Orbitron', sans-serif;">
+                    FOOTBALL STUDIO <span class="text-red-600">PRO</span>
+                </h1>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Gestão de Banca e Análise de Padrões
                 </p>
             </div>
 
-            <!-- Main Card -->
-            <div class="bg-gradient-to-br from-zinc-950 to-black p-8 md:p-10 rounded-3xl shadow-2xl border-2 border-red-900/30 hover:border-red-700/50 transition-all duration-500 backdrop-blur-sm card-glow animate-fade-in-up" data-testid="main-card">
-                
-                <form id="simuladorForm" class="mb-12" data-testid="simulator-form">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        
-                        <!-- Banca Inicial -->
-                        <div class="form-group" data-testid="banca-inicial-group">
-                            <label for="bancaInicial" class="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">
-                                💰 Banca Inicial
-                            </label>
-                            <div class="relative input-wrapper">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-red-500 font-bold">R$</span>
-                                <input type="number" id="bancaInicial" value="100" min="1" step="any"
-                                       class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium text-lg hover:border-red-700/70"
-                                       placeholder="Ex: 100"
-                                       data-testid="banca-inicial-input">
-                                <div class="input-glow"></div>
-                            </div>
-                        </div>
+            <div class="flex justify-center mb-8 gap-4 animate-fade-in-up">
+                <button onclick="switchTab('simulador')" id="tab-simulador" class="tab-btn active px-6 py-3 rounded-xl font-bold uppercase tracking-wider transition-all border-b-2 border-red-600 bg-red-900/20 text-white">
+                    <i class="fas fa-calculator mr-2"></i> Simulador
+                </button>
+                <button onclick="switchTab('estrategias')" id="tab-estrategias" class="tab-btn px-6 py-3 rounded-xl font-bold uppercase tracking-wider transition-all border-b-2 border-transparent hover:bg-zinc-900 text-gray-400 hover:text-white">
+                    <i class="fas fa-chess-board mr-2"></i> Estratégias & Dicas
+                </button>
+            </div>
 
-                        <!-- Sessões por Dia -->
-                        <div class="form-group" data-testid="sessoes-group">
-                            <label for="sessoesPorDia" class="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">
-                                🎯 Sessões por Dia
-                            </label>
-                            <div class="relative input-wrapper">
-                                <input type="number" id="sessoesPorDia" value="3" min="1"
-                                       class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium text-lg hover:border-red-700/70"
-                                       placeholder="Ex: 3"
-                                       data-testid="sessoes-input">
-                                <div class="input-glow"></div>
-                            </div>
-                        </div>
-
-                        <!-- Duração -->
-                        <div class="flex items-end gap-4" data-testid="duracao-group">
-                            <div class="flex-grow form-group">
-                                <label for="duracao" class="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">
-                                    📅 Duração
-                                </label>
-                                <div class="relative input-wrapper">
-                                    <input type="number" id="duracao" value="30" min="1"
-                                           class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium text-lg hover:border-red-700/70"
-                                           placeholder="Ex: 30"
-                                           data-testid="duracao-input">
-                                    <div class="input-glow"></div>
-                                </div>
-                            </div>
+            <div id="content-simulador" class="tab-content block">
+                <div class="bg-gradient-to-br from-zinc-950 to-black p-8 md:p-10 rounded-3xl shadow-2xl border-2 border-red-900/30 backdrop-blur-sm card-glow animate-fade-in-up">
+                    
+                    <form id="simuladorForm" class="mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             
-                            <div class="flex-shrink-0 w-32">
-                                <select id="tipoPeriodo"
-                                        class="w-full h-[58px] bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium hover:border-red-700/70 cursor-pointer"
-                                        data-testid="tipo-periodo-select">
-                                    <option value="dias">Dias</option>
-                                    <option value="meses">Meses</option>
+                            <div class="form-group">
+                                <label class="block text-sm font-semibold text-gray-300 mb-2 uppercase">💰 Banca Inicial</label>
+                                <div class="relative input-wrapper">
+                                    <input type="number" id="bancaInicial" value="150" min="50" class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:border-red-500 focus:outline-none transition-all font-medium text-lg" placeholder="Mínimo recomendado: 150">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">*Mínimo recomendado no vídeo: R$150 (R$50 aceitável)</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="block text-sm font-semibold text-gray-300 mb-2 uppercase">📊 Perfil de Gestão</label>
+                                <select id="perfilRisco" class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:border-red-500 outline-none cursor-pointer text-lg">
+                                    <option value="0.05">Conservador (5% - Recomendado)</option>
+                                    <option value="0.10">Agressivo (10%)</option>
                                 </select>
                             </div>
+
+                            <div class="form-group">
+                                <label class="block text-sm font-semibold text-gray-300 mb-2 uppercase">🎯 Entradas/Dia</label>
+                                <input type="number" id="entradasDia" value="5" max="8" class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:border-red-500 outline-none text-lg">
+                                <p class="text-xs text-gray-500 mt-1">*Vídeo sugere 5 a 8 entradas diárias</p>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="w-2/3 form-group">
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2 uppercase">📅 Duração</label>
+                                    <input type="number" id="duracao" value="15" class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:border-red-500 outline-none text-lg">
+                                </div>
+                                <div class="w-1/3 form-group">
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2 uppercase">Tipo</label>
+                                    <select id="tipoPeriodo" class="w-full h-[62px] bg-black/80 border-2 border-red-900/50 text-white rounded-xl px-2 focus:border-red-500 outline-none">
+                                        <option value="dias">Dias</option>
+                                        <option value="meses">Meses</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Taxa Fixa -->
-                        <div class="flex items-center justify-center bg-gradient-to-r from-red-950/30 via-red-900/20 to-red-950/30 p-6 rounded-xl border-2 border-red-900/50 hover:border-red-700/70 transition-all duration-300" data-testid="taxa-display">
-                            <span class="text-lg font-medium text-white">
-                                📈 Taxa por Sessão: 
-                                <span class="font-bold text-red-400 text-2xl ml-2" style="font-family: 'Orbitron', sans-serif;">5%</span>
-                                <span class="text-sm text-gray-400 ml-2">(Fixo)</span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <button type="submit" id="btnCalcular"
-                                class="group relative w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-red-500/50 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98]"
-                                data-testid="calcular-button">
-                            <span class="relative z-10 flex items-center justify-center gap-2 text-lg uppercase tracking-wide" style="font-family: 'Orbitron', sans-serif;">
-                                <span id="btnCalcularText">🚀 Calcular Projeção</span>
-                            </span>
-                            <div class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div class="button-shine"></div>
+                        <button type="submit" id="btnCalcular" class="w-full bg-gradient-to-r from-red-600 to-red-800 text-white font-bold py-4 rounded-xl shadow-lg hover:scale-[1.01] transition-transform uppercase tracking-widest text-lg font-orbitron">
+                            Calcular Projeção
                         </button>
-                        <button type="button" id="btnLimpar"
-                                class="group relative w-full bg-gradient-to-r from-zinc-800 to-zinc-900 text-white font-bold py-4 px-8 rounded-xl border-2 border-red-900/30 hover:border-red-700/70 shadow-lg overflow-hidden transition-all duration-300 hover:shadow-red-900/30 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-                                data-testid="limpar-button">
-                            <span class="relative z-10 flex items-center justify-center gap-2 text-lg uppercase tracking-wide" style="font-family: 'Orbitron', sans-serif;">
-                                🗑️ Limpar
-                            </span>
-                        </button>
-                    </div>
-                </form>
+                    </form>
 
-                <!-- Loading State -->
-                <div id="loadingState" class="hidden mb-8" data-testid="loading-state">
-                    <div class="flex flex-col items-center justify-center py-12">
-                        <div class="loading-spinner mb-4"></div>
-                        <p class="text-red-400 font-semibold animate-pulse">Calculando sua projeção...</p>
-                    </div>
-                </div>
-
-                <!-- Results Area -->
-                <div id="resultadoArea" class="hidden" data-testid="resultado-area">
-                    
-                    <!-- Summary Cards -->
-                    <div class="mb-10">
-                        <div class="flex items-center justify-center mb-6">
-                            <div class="h-px w-16 bg-gradient-to-r from-transparent to-red-600"></div>
-                            <h2 class="text-3xl font-bold text-white mx-4 uppercase" style="font-family: 'Orbitron', sans-serif;" data-testid="resumo-title">Resumo da Simulação</h2>
-                            <div class="h-px w-16 bg-gradient-to-l from-transparent to-red-600"></div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                            
-                            <!-- Banca Inicial Card -->
-                            <div class="stat-card bg-gradient-to-br from-zinc-900 to-black p-8 rounded-2xl border-2 border-red-900/30 hover:border-red-700/70 transition-all duration-500 hover:scale-105" data-testid="banca-inicial-card">
-                                <p class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">💵 Banca Inicial</p>
-                                <p id="resBancaInicial" class="text-3xl font-bold text-white stat-value" data-testid="res-banca-inicial">-</p>
+                    <div id="resultadoArea" class="hidden border-t-2 border-red-900/30 pt-8">
+                        <h3 class="text-2xl font-bold text-white mb-6 font-orbitron text-center">Resumo da Quinzena</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
+                            <div class="p-6 bg-zinc-900/50 rounded-xl border border-red-900/20">
+                                <p class="text-gray-400 text-sm uppercase">Banca Final</p>
+                                <p id="resBancaFinal" class="text-3xl font-bold text-red-500 mt-2">-</p>
                             </div>
-                            
-                            <!-- Lucro Total Card -->
-                            <div class="stat-card bg-gradient-to-br from-zinc-900 to-black p-8 rounded-2xl border-2 border-green-900/30 hover:border-green-600/70 transition-all duration-500 hover:scale-105" data-testid="lucro-total-card">
-                                <p class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">💰 Lucro Total</p>
-                                <p id="resLucroTotal" class="text-3xl font-bold text-green-400 stat-value" data-testid="res-lucro-total">-</p>
+                            <div class="p-6 bg-zinc-900/50 rounded-xl border border-green-900/20">
+                                <p class="text-gray-400 text-sm uppercase">Lucro Líquido</p>
+                                <p id="resLucroTotal" class="text-3xl font-bold text-green-500 mt-2">-</p>
                             </div>
-
-                            <!-- Banca Final Card -->
-                            <div class="stat-card bg-gradient-to-br from-zinc-900 to-black p-8 rounded-2xl border-2 border-red-900/30 hover:border-red-500/70 transition-all duration-500 hover:scale-105" data-testid="banca-final-card">
-                                <p class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">🎯 Banca Final</p>
-                                <p id="resBancaFinal" class="text-3xl font-bold text-red-400 stat-value" data-testid="res-banca-final">-</p>
+                            <div class="p-6 bg-zinc-900/50 rounded-xl border border-red-900/20">
+                                <p class="text-gray-400 text-sm uppercase">Valor da Mão Fixa</p>
+                                <p id="resMaoFixa" class="text-3xl font-bold text-white mt-2">-</p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Details Table -->
-                    <div>
-                        <div class="flex items-center justify-center mb-6">
-                            <div class="h-px w-16 bg-gradient-to-r from-transparent to-red-600"></div>
-                            <h3 class="text-2xl font-bold text-white mx-4 uppercase" style="font-family: 'Orbitron', sans-serif;" data-testid="detalhes-title">Detalhes Sessão por Sessão</h3>
-                            <div class="h-px w-16 bg-gradient-to-l from-transparent to-red-600"></div>
-                        </div>
-                        <div class="max-h-[600px] overflow-y-auto overflow-x-auto rounded-2xl border-2 border-red-900/30 shadow-2xl custom-scrollbar" data-testid="tabela-container">
-                            <table class="w-full min-w-[700px] text-left">
-                                <thead class="bg-gradient-to-r from-red-950 to-zinc-950 sticky top-0 z-10 border-b-2 border-red-900/50">
+                        
+                        <div class="overflow-x-auto rounded-xl border border-red-900/30">
+                            <table class="w-full text-left text-sm text-gray-400">
+                                <thead class="bg-red-950/50 text-white uppercase font-bold">
                                     <tr>
-                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Dia</th>
-                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Sessão</th>
-                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Banca Inicial</th>
-                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Meta (5%)</th>
-                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Banca Final</th>
+                                        <th class="p-4">Dia</th>
+                                        <th class="p-4">Banca Inicial</th>
+                                        <th class="p-4">Meta Diária</th>
+                                        <th class="p-4 text-right">Banca Final</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tabelaResultados" class="bg-black/60 divide-y divide-red-900/20" data-testid="tabela-resultados">
-                                </tbody>
+                                <tbody id="tabelaResultados" class="divide-y divide-red-900/10"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer -->
-            <div class="text-center mt-8 animate-fade-in-up" style="animation-delay: 0.2s;">
-                <p class="text-gray-500 text-sm">
-                    Desenvolvido por Matsuda <span class="text-red-500 animate-pulse">❤️</span> 
+            <div id="content-estrategias" class="tab-content hidden">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-zinc-950 p-6 rounded-2xl border-l-4 border-blue-500 shadow-lg hover:bg-zinc-900 transition-colors">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fas fa-chart-line text-2xl text-blue-500"></i>
+                            <h3 class="text-xl font-bold text-white font-orbitron">Análise de Gráfico</h3>
+                        </div>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start gap-2">
+                                <span class="text-green-500">✅</span>
+                                <div>
+                                    <strong class="text-white">Oscilação (Bom):</strong>
+                                    <p class="text-sm">Gráfico misturado (Vermelho, Azul, Azul, Vermelho). <span class="text-green-400">Melhor momento para jogar.</span></p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-500">❌</span>
+                                <div>
+                                    <strong class="text-white">Surf/Repetição (Perigoso):</strong>
+                                    <p class="text-sm">Muitas cores iguais seguidas (ex: 8 vermelhos). Evite jogar contra a tendência.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-zinc-950 p-6 rounded-2xl border-l-4 border-purple-500 shadow-lg hover:bg-zinc-900 transition-colors">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fas fa-puzzle-piece text-2xl text-purple-500"></i>
+                            <h3 class="text-xl font-bold text-white font-orbitron">Padrões de Cores</h3>
+                        </div>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start gap-2">
+                                <span class="text-yellow-500">⚡</span>
+                                <div>
+                                    <strong class="text-white">Quebra de Padrão:</strong>
+                                    <p class="text-sm">Saiu 3 Azuis? A 4ª entrada joga no <span class="text-red-500 font-bold">Vermelho</span>.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-yellow-500">⚡</span>
+                                <div>
+                                    <strong class="text-white">Padrão Casal:</strong>
+                                    <p class="text-sm">2 Vermelhos + 2 Azuis → Próximo é <span class="text-red-500 font-bold">Vermelho</span>.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-zinc-950 p-6 rounded-2xl border-l-4 border-yellow-500 shadow-lg hover:bg-zinc-900 transition-colors md:col-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fas fa-crown text-2xl text-yellow-500"></i>
+                            <h3 class="text-xl font-bold text-white font-orbitron">Análise de Cartas (Tips Secretas)</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-zinc-900 p-4 rounded-lg">
+                                <strong class="text-red-400 block mb-2">Ás (A)</strong>
+                                <p class="text-sm text-gray-400">Geralmente quebra a cor. Se o Ás bateu no Vermelho, jogue no Azul na próxima.</p>
+                            </div>
+                            <div class="bg-zinc-900 p-4 rounded-lg">
+                                <strong class="text-blue-400 block mb-2">Valete (J) e Rei (K)</strong>
+                                <p class="text-sm text-gray-400">Se o gráfico estiver "surfando" (repetindo), eles respeitam a cor. Se Rei bateu Azul, jogue Azul.</p>
+                            </div>
+                            <div class="bg-zinc-900 p-4 rounded-lg">
+                                <strong class="text-green-400 block mb-2">Empate (X)</strong>
+                                <p class="text-sm text-gray-400">Jogue na cor que saiu ANTES do empate. Ex: Vermelho -> Empate -> Jogue <span class="text-red-500">Vermelho</span>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-950 p-6 rounded-2xl border-l-4 border-green-600 shadow-lg hover:bg-zinc-900 transition-colors md:col-span-2">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-shield-alt text-2xl text-green-600"></i>
+                                <h3 class="text-xl font-bold text-white font-orbitron">Calculadora de Gale (Proteção)</h3>
+                            </div>
+                            <span class="text-xs bg-red-900/50 text-red-200 px-3 py-1 rounded-full mt-2 md:mt-0">Máximo 2 Proteções!</span>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row gap-4 items-end">
+                            <div class="w-full md:w-1/3">
+                                <label class="text-xs text-gray-400 uppercase">Entrada Inicial</label>
+                                <input type="number" id="galeInput" class="w-full bg-black border border-zinc-700 rounded p-2 text-white" placeholder="R$ 5.00">
+                            </div>
+                            <button onclick="calcularGale()" class="bg-green-700 hover:bg-green-600 text-white px-6 py-2 rounded font-bold transition-colors">Calcular</button>
+                        </div>
+
+                        <div id="galeResult" class="mt-4 grid grid-cols-3 gap-2 hidden animate-fade-in-down">
+                            <div class="text-center bg-zinc-900 p-2 rounded border border-zinc-700">
+                                <p class="text-xs text-gray-500">Entrada</p>
+                                <p class="font-bold text-white" id="valEntrada">-</p>
+                            </div>
+                            <div class="text-center bg-zinc-900 p-2 rounded border border-yellow-900/50">
+                                <p class="text-xs text-gray-500">Gale 1 (Dobro)</p>
+                                <p class="font-bold text-yellow-500" id="valGale1">-</p>
+                            </div>
+                            <div class="text-center bg-zinc-900 p-2 rounded border border-red-900/50">
+                                <p class="text-xs text-gray-500">Gale 2 (Dobro x2)</p>
+                                <p class="font-bold text-red-500" id="valGale2">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-12 border-t border-zinc-800 pt-8">
+                <p class="text-gray-600 text-sm">
+                    ⚠️ Jogue com responsabilidade. Proibido para menores de 18 anos. Isso não é uma recomendação de investimento.
                 </p>
             </div>
         </div>

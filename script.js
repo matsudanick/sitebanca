@@ -1,30 +1,24 @@
 // ==================== NAVEGAÇÃO ====================
 function switchTab(tabName) {
-    // Esconde tudo
     document.querySelectorAll('.tab-content').forEach(el => {
         el.classList.add('hidden');
         el.classList.remove('block');
     });
     
-    // Reseta botões
     document.querySelectorAll('.tab-btn').forEach(el => {
         el.classList.remove('active', 'bg-zinc-900', 'border-red-600', 'text-white');
         el.classList.add('border-zinc-800', 'text-gray-400');
     });
 
-    // Mostra selecionado
     const selected = document.getElementById(`content-${tabName}`);
     if (selected) {
         selected.classList.remove('hidden');
         selected.classList.add('block');
-        
-        // Re-trigger animation
         selected.style.animation = 'none';
         selected.offsetHeight; /* trigger reflow */
         selected.style.animation = null; 
     }
     
-    // Ativa botão
     const btn = document.getElementById(`tab-${tabName}`);
     if (btn) {
         btn.classList.add('active');
@@ -69,45 +63,35 @@ if (simuladorForm) {
 
         // 1. Coleta de Dados
         const bancaInicial = parseFloat(document.getElementById('bancaInicial').value);
-        const taxaRisco = parseFloat(document.getElementById('perfilRisco').value); // 0.05 ou 0.10
-        const winsPorDia = parseInt(document.getElementById('entradasDia').value);
+        const percentualMeta = parseFloat(document.getElementById('perfilRisco').value); // 0.10, 0.15 ou 0.05
         const sessoesPorDia = parseInt(document.getElementById('sessoesDia').value);
         let duracao = parseInt(document.getElementById('duracao').value);
-        const tipoPeriodo = document.getElementById('tipoPeriodo').value;
 
-        // Ajuste de Meses
-        if (tipoPeriodo === 'meses') duracao *= 30;
-
-        // Validações de Segurança
+        // Validações
         if (bancaInicial < 50) {
-            alert("⚠️ Atenção Jogador: Bancas abaixo de R$50,00 possuem risco crítico de quebra. Recomendamos iniciar com R$150,00.");
+            alert("⚠️ Atenção: recomenda-se banca mínima de R$150 para ter margem de segurança no Gale.");
         }
-        if (sessoesPorDia > winsPorDia) {
-            alert("⚠️ Erro de Lógica: Você não pode ter mais sessões do que vitórias. Aumente seus wins ou diminua as sessões.");
+        if (sessoesPorDia < 1) {
+            alert("Defina pelo menos 1 sessão por dia.");
             return;
         }
 
-        // 2. Cálculos Iniciais
+        // 2. Cálculos
         let bancaAtual = bancaInicial;
         let htmlTabela = '';
         
-        // Mão Fixa (Baseada na banca inicial para não expor demais no começo)
-        const maoFixaInicial = bancaInicial * taxaRisco;
-
-        // 3. Loop de Projeção
+        // Juros compostos diários baseados na meta
+        
         for (let dia = 1; dia <= duracao; dia++) {
             
-            // Recalcula entrada com base na banca atual (Juros Compostos)
-            let valorEntrada = bancaAtual * taxaRisco;
+            // Meta do dia = Banca Atual * % Escolhida
+            let metaDoDia = bancaAtual * percentualMeta;
             
-            // Lucro Bruto do Dia (Entrada * Wins)
-            let lucroDia = valorEntrada * winsPorDia;
-            
-            // Meta por Sessão
-            let metaPorSessao = lucroDia / sessoesPorDia;
+            // Meta por Sessão = Meta do Dia / Numero de Sessões
+            let metaPorSessao = metaDoDia / sessoesPorDia;
 
             let bancaAnterior = bancaAtual;
-            bancaAtual += lucroDia;
+            bancaAtual += metaDoDia;
 
             htmlTabela += `
                 <tr class="hover:bg-zinc-900 transition-colors border-b border-zinc-800/50 group">
@@ -119,21 +103,20 @@ if (simuladorForm) {
                     <td class="p-4 text-center bg-red-900/5 border-x border-zinc-800/50">
                         <div class="flex flex-col items-center">
                             <span class="text-red-300 font-bold text-sm">${formatMoney(metaPorSessao)}</span>
-                            <span class="text-[10px] text-red-500/60 uppercase tracking-wide">x${sessoesPorDia} Sessões</span>
+                            <span class="text-[10px] text-red-500/60 uppercase tracking-wide">em ${sessoesPorDia} Sessões</span>
                         </div>
                     </td>
                     
-                    <td class="p-4 text-right text-green-500 font-medium">+${formatMoney(lucroDia)}</td>
                     <td class="p-4 text-right text-white font-bold text-lg">${formatMoney(bancaAtual)}</td>
                 </tr>
             `;
         }
 
-        // 4. Renderização
+        // 3. Renderização
         document.getElementById('tabelaResultados').innerHTML = htmlTabela;
         
-        // Cards de Resumo
-        animateValue(document.getElementById('resMaoFixa'), 0, maoFixaInicial, 1000);
+        // Resumo com animação
+        animateValue(document.getElementById('resMetaDiaria'), 0, bancaInicial * percentualMeta, 1000);
         animateValue(document.getElementById('resLucroTotal'), 0, bancaAtual - bancaInicial, 1500);
         animateValue(document.getElementById('resBancaFinal'), 0, bancaAtual, 1500);
 
@@ -141,14 +124,14 @@ if (simuladorForm) {
         const area = document.getElementById('resultadoArea');
         area.classList.remove('hidden');
         
-        // Scroll suave
+        // Scroll
         setTimeout(() => {
             area.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     });
 }
 
-// Função de Animação de Números
+// Animação de Números
 function animateValue(obj, start, end, duration) {
     let startTimestamp = null;
     const step = (timestamp) => {
@@ -165,5 +148,7 @@ function animateValue(obj, start, end, duration) {
 
 // Inicialização
 window.addEventListener('load', () => {
-    switchTab('simulador'); // Abre no simulador
+    switchTab('simulador');
+    const inputInit = document.getElementById('bancaInicial');
+    if(inputInit) inputInit.focus();
 });

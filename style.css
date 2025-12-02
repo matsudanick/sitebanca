@@ -2,27 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fonte Global */
+/* Base */
 body {
     background-color: #050505;
     font-family: 'Inter', sans-serif;
-    color: #e4e4e7; /* zinc-200 */
+    color: #e4e4e7;
 }
 
 .font-orbitron {
     font-family: 'Orbitron', sans-serif;
-}
-
-/* Tab Ativa com Efeito */
-.tab-btn.active {
-    box-shadow: 0 0 25px rgba(220, 38, 38, 0.15);
-    border-color: #dc2626;
-    color: white;
-    background-color: #18181b; /* zinc-900 */
-}
-
-.tab-btn.active i {
-    color: #ef4444; /* red-500 */
 }
 
 /* Custom Scrollbar */
@@ -41,7 +29,12 @@ body {
     background: #dc2626;
 }
 
-/* Animações Suaves */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #27272a #09090b;
+}
+
+/* Animations */
 @keyframes slideRight {
     from { opacity: 0; transform: translateX(-20px); }
     to { opacity: 1; transform: translateX(0); }
@@ -64,16 +57,22 @@ body {
 .animate-fade-in-down { animation: fadeInDown 0.6s ease-out forwards; }
 .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
 
-.animate-pulse-slow {
-    animation: pulse 8s infinite;
-}
-
+.animate-pulse-slow { animation: pulse 8s infinite; }
 @keyframes pulse {
     0%, 100% { opacity: 0.1; transform: scale(1); }
     50% { opacity: 0.3; transform: scale(1.2); }
 }
 
-/* Background Grids e Glows */
+/* Tabs Styling */
+.tab-btn.active {
+    box-shadow: 0 0 25px rgba(220, 38, 38, 0.15);
+    border-color: #dc2626;
+    color: white;
+    background-color: #18181b;
+}
+.tab-btn.active i { color: #ef4444; }
+
+/* Background Visuals */
 .grid-background {
     background-image: linear-gradient(rgba(50, 50, 50, 0.5) 1px, transparent 1px),
     linear-gradient(90deg, rgba(50, 50, 50, 0.5) 1px, transparent 1px);
@@ -87,16 +86,11 @@ body {
     background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
     border-radius: 50%;
     filter: blur(100px);
+    pointer-events: none;
 }
 
-/* Inputs numéricos sem setas */
+.title-glow { text-shadow: 0 0 40px rgba(220, 38, 38, 0.4); }
+
+/* Inputs */
 input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
-/* Efeito Title Glow */
-.title-glow {
-    text-shadow: 0 0 40px rgba(220, 38, 38, 0.4);
-}
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }

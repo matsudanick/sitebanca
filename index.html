@@ -3,134 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Juros Compostos - Banca</title>
-    <!-- Carrega o Tailwind CSS (necessário para as classes no HTML) -->
+    <title>Simulador de Banca Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Link para o arquivo CSS externo -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
+<body class="bg-black text-gray-100 min-h-screen relative overflow-x-hidden">
+    
+    <!-- Background animated grid -->
+    <div class="fixed inset-0 pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-black via-red-950/5 to-black"></div>
+        <div class="grid-background"></div>
+        <div class="red-glow red-glow-1"></div>
+        <div class="red-glow red-glow-2"></div>
+        <div class="red-glow red-glow-3"></div>
+    </div>
 
-    <!-- Card Principal -->
-    <div class="w-full max-w-5xl bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-700">
-        
-        <!-- Cabeçalho -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-white mb-2">Simulador de Banca</h1>
-            <p class="text-lg text-gray-400">Projete seus ganhos com juros compostos por sessão.</p>
-        </div>
-
-        <!-- Formulário de Inputs -->
-        <form id="simuladorForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="relative z-10 flex items-center justify-center min-h-screen p-4 py-12">
+        <div class="w-full max-w-6xl">
             
-            <!-- Input: Banca Inicial -->
-            <div>
-                <label for="bancaInicial" class="block text-sm font-medium text-gray-300 mb-2">Banca Inicial (R$)</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">R$</span>
-                    <input type="number" id="bancaInicial" value="100" min="1" step="any"
-                           class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="Ex: 100">
+            <!-- Header -->
+            <div class="text-center mb-12 animate-fade-in-down">
+                <div class="inline-block mb-4">
+                    <div class="relative">
+                        <h1 class="text-5xl md:text-6xl font-bold text-white mb-2 title-glow" style="font-family: 'Orbitron', sans-serif;">
+                            SIMULADOR DE BANCA
+                        </h1>
+                        <div class="h-1 w-full bg-gradient-to-r from-transparent via-red-600 to-transparent mt-4 animate-pulse-slow"></div>
+                    </div>
                 </div>
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
+                    Projete seus ganhos com <span class="text-red-500 font-semibold">juros compostos</span> por sessão
+                </p>
             </div>
 
-            <!-- Input: Sessões por Dia -->
-            <div>
-                <label for="sessoesPorDia" class="block text-sm font-medium text-gray-300 mb-2">Sessões por Dia</label>
-                <input type="number" id="sessoesPorDia" value="3" min="1"
-                       class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                       placeholder="Ex: 3">
-            </div>
-
-            <!-- Input: Duração -->
-            <div class="flex items-end gap-4">
-                <div class="flex-grow">
-                    <label for="duracao" class="block text-sm font-medium text-gray-300 mb-2">Duração</label>
-                    <input type="number" id="duracao" value="30" min="1"
-                           class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="Ex: 30">
-                </div>
+            <!-- Main Card -->
+            <div class="bg-gradient-to-br from-zinc-950 to-black p-8 md:p-10 rounded-3xl shadow-2xl border-2 border-red-900/30 hover:border-red-700/50 transition-all duration-500 backdrop-blur-sm card-glow animate-fade-in-up" data-testid="main-card">
                 
-                <!-- Input: Tipo de Período -->
-                <div class="flex-shrink-0">
-                    <select id="tipoPeriodo"
-                            class="w-full h-[50px] bg-gray-700 border border-gray-600 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="dias">Dias</option>
-                        <option value="meses">Meses</option>
-                    </select>
+                <form id="simuladorForm" class="mb-12" data-testid="simulator-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        
+                        <!-- Banca Inicial -->
+                        <div class="form-group" data-testid="banca-inicial-group">
+                            <label for="bancaInicial" class="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">
+                                💰 Banca Inicial
+                            </label>
+                            <div class="relative input-wrapper">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-red-500 font-bold">R$</span>
+                                <input type="number" id="bancaInicial" value="100" min="1" step="any"
+                                       class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium text-lg hover:border-red-700/70"
+                                       placeholder="Ex: 100"
+                                       data-testid="banca-inicial-input">
+                                <div class="input-glow"></div>
+                            </div>
+                        </div>
+
+                        <!-- Sessões por Dia -->
+                        <div class="form-group" data-testid="sessoes-group">
+                            <label for="sessoesPorDia" class="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">
+                                🎯 Sessões por Dia
+                            </label>
+                            <div class="relative input-wrapper">
+                                <input type="number" id="sessoesPorDia" value="3" min="1"
+                                       class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium text-lg hover:border-red-700/70"
+                                       placeholder="Ex: 3"
+                                       data-testid="sessoes-input">
+                                <div class="input-glow"></div>
+                            </div>
+                        </div>
+
+                        <!-- Duração -->
+                        <div class="flex items-end gap-4" data-testid="duracao-group">
+                            <div class="flex-grow form-group">
+                                <label for="duracao" class="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">
+                                    📅 Duração
+                                </label>
+                                <div class="relative input-wrapper">
+                                    <input type="number" id="duracao" value="30" min="1"
+                                           class="w-full bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium text-lg hover:border-red-700/70"
+                                           placeholder="Ex: 30"
+                                           data-testid="duracao-input">
+                                    <div class="input-glow"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex-shrink-0 w-32">
+                                <select id="tipoPeriodo"
+                                        class="w-full h-[58px] bg-black/80 border-2 border-red-900/50 text-white rounded-xl py-4 px-4 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50 transition-all duration-300 font-medium hover:border-red-700/70 cursor-pointer"
+                                        data-testid="tipo-periodo-select">
+                                    <option value="dias">Dias</option>
+                                    <option value="meses">Meses</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Taxa Fixa -->
+                        <div class="flex items-center justify-center bg-gradient-to-r from-red-950/30 via-red-900/20 to-red-950/30 p-6 rounded-xl border-2 border-red-900/50 hover:border-red-700/70 transition-all duration-300" data-testid="taxa-display">
+                            <span class="text-lg font-medium text-white">
+                                📈 Taxa por Sessão: 
+                                <span class="font-bold text-red-400 text-2xl ml-2" style="font-family: 'Orbitron', sans-serif;">5%</span>
+                                <span class="text-sm text-gray-400 ml-2">(Fixo)</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button type="submit" id="btnCalcular"
+                                class="group relative w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-red-500/50 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98]"
+                                data-testid="calcular-button">
+                            <span class="relative z-10 flex items-center justify-center gap-2 text-lg uppercase tracking-wide" style="font-family: 'Orbitron', sans-serif;">
+                                <span id="btnCalcularText">🚀 Calcular Projeção</span>
+                            </span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div class="button-shine"></div>
+                        </button>
+                        <button type="button" id="btnLimpar"
+                                class="group relative w-full bg-gradient-to-r from-zinc-800 to-zinc-900 text-white font-bold py-4 px-8 rounded-xl border-2 border-red-900/30 hover:border-red-700/70 shadow-lg overflow-hidden transition-all duration-300 hover:shadow-red-900/30 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                                data-testid="limpar-button">
+                            <span class="relative z-10 flex items-center justify-center gap-2 text-lg uppercase tracking-wide" style="font-family: 'Orbitron', sans-serif;">
+                                🗑️ Limpar
+                            </span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="hidden mb-8" data-testid="loading-state">
+                    <div class="flex flex-col items-center justify-center py-12">
+                        <div class="loading-spinner mb-4"></div>
+                        <p class="text-red-400 font-semibold animate-pulse">Calculando sua projeção...</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Info: Taxa Fixa -->
-            <div class="flex items-center justify-center bg-gray-700/50 p-4 rounded-lg border border-gray-600">
-                <span class="text-lg font-medium text-white">Taxa por Sessão: <span class="font-bold text-blue-400">5% (Fixo)</span></span>
-            </div>
-
-            <!-- Botões de Ação -->
-            <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                <button type="submit" id="btnCalcular"
-                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800">
-                    Calcular Projeção
-                </button>
-                <button type="button" id="btnLimpar"
-                        class="w-full bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800">
-                    Limpar
-                </button>
-            </div>
-        </form>
-
-        <!-- Área de Resultados (Oculta por padrão) -->
-        <div id="resultadoArea" class="hidden">
-            
-            <!-- Resumo dos Ganhos -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-semibold text-white mb-4 text-center">Resumo da Simulação</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <!-- Results Area -->
+                <div id="resultadoArea" class="hidden" data-testid="resultado-area">
                     
-                    <div class="bg-gray-700 p-6 rounded-lg">
-                        <p class="text-sm font-medium text-gray-400 mb-1">Banca Inicial</p>
-                        <p id="resBancaInicial" class="text-2xl font-bold text-white">-</p>
-                    </div>
-                    
-                    <div class="bg-gray-700 p-6 rounded-lg">
-                        <p class="text-sm font-medium text-gray-400 mb-1">Lucro Total</p>
-                        <p id="resLucroTotal" class="text-2xl font-bold text-green-400">-</p>
+                    <!-- Summary Cards -->
+                    <div class="mb-10">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="h-px w-16 bg-gradient-to-r from-transparent to-red-600"></div>
+                            <h2 class="text-3xl font-bold text-white mx-4 uppercase" style="font-family: 'Orbitron', sans-serif;" data-testid="resumo-title">Resumo da Simulação</h2>
+                            <div class="h-px w-16 bg-gradient-to-l from-transparent to-red-600"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                            
+                            <!-- Banca Inicial Card -->
+                            <div class="stat-card bg-gradient-to-br from-zinc-900 to-black p-8 rounded-2xl border-2 border-red-900/30 hover:border-red-700/70 transition-all duration-500 hover:scale-105" data-testid="banca-inicial-card">
+                                <p class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">💵 Banca Inicial</p>
+                                <p id="resBancaInicial" class="text-3xl font-bold text-white stat-value" data-testid="res-banca-inicial">-</p>
+                            </div>
+                            
+                            <!-- Lucro Total Card -->
+                            <div class="stat-card bg-gradient-to-br from-zinc-900 to-black p-8 rounded-2xl border-2 border-green-900/30 hover:border-green-600/70 transition-all duration-500 hover:scale-105" data-testid="lucro-total-card">
+                                <p class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">💰 Lucro Total</p>
+                                <p id="resLucroTotal" class="text-3xl font-bold text-green-400 stat-value" data-testid="res-lucro-total">-</p>
+                            </div>
+
+                            <!-- Banca Final Card -->
+                            <div class="stat-card bg-gradient-to-br from-zinc-900 to-black p-8 rounded-2xl border-2 border-red-900/30 hover:border-red-500/70 transition-all duration-500 hover:scale-105" data-testid="banca-final-card">
+                                <p class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">🎯 Banca Final</p>
+                                <p id="resBancaFinal" class="text-3xl font-bold text-red-400 stat-value" data-testid="res-banca-final">-</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="bg-gray-700 p-6 rounded-lg">
-                        <p class="text-sm font-medium text-gray-400 mb-1">Banca Final</p>
-                        <p id="resBancaFinal" class="text-2xl font-bold text-blue-400">-</p>
+                    <!-- Details Table -->
+                    <div>
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="h-px w-16 bg-gradient-to-r from-transparent to-red-600"></div>
+                            <h3 class="text-2xl font-bold text-white mx-4 uppercase" style="font-family: 'Orbitron', sans-serif;" data-testid="detalhes-title">Detalhes Sessão por Sessão</h3>
+                            <div class="h-px w-16 bg-gradient-to-l from-transparent to-red-600"></div>
+                        </div>
+                        <div class="max-h-[600px] overflow-y-auto overflow-x-auto rounded-2xl border-2 border-red-900/30 shadow-2xl custom-scrollbar" data-testid="tabela-container">
+                            <table class="w-full min-w-[700px] text-left">
+                                <thead class="bg-gradient-to-r from-red-950 to-zinc-950 sticky top-0 z-10 border-b-2 border-red-900/50">
+                                    <tr>
+                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Dia</th>
+                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Sessão</th>
+                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Banca Inicial</th>
+                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Meta (5%)</th>
+                                        <th class="p-4 text-sm font-bold text-red-300 uppercase tracking-wider">Banca Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaResultados" class="bg-black/60 divide-y divide-red-900/20" data-testid="tabela-resultados">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Detalhes Dia a Dia (Tabela) -->
-            <div>
-                <h3 class="text-xl font-semibold text-white mb-4 text-center">Detalhes Sessão por Sessão</h3>
-                <!-- Container da Tabela com Rolagem -->
-                <div class="max-h-[500px] overflow-y-auto overflow-x-auto rounded-lg border border-gray-700 shadow-md">
-                    <table class="w-full min-w-[700px] text-left">
-                        <thead class="bg-gray-700 sticky top-0 z-10">
-                            <tr>
-                                <th class="p-3 text-sm font-semibold text-gray-300">Dia</th>
-                                <th class="p-3 text-sm font-semibold text-gray-300">Sessão</th>
-                                <th class="p-3 text-sm font-semibold text-gray-300">Banca Inicial</th>
-                                <th class="p-3 text-sm font-semibold text-gray-300">Meta (5%)</th>
-                                <th class="p-3 text-sm font-semibold text-gray-300">Banca Final</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaResultados" class="bg-gray-800 divide-y divide-gray-700">
-                            <!-- Linhas serão injetadas pelo JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
+            <!-- Footer -->
+            <div class="text-center mt-8 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <p class="text-gray-500 text-sm">
+                    Desenvolvido com <span class="text-red-500 animate-pulse">❤️</span> para traders profissionais
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Link para o arquivo JavaScript externo -->
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,113 +1,169 @@
-// --- Lógica de Navegação entre Abas ---
+// ==================== NAVEGAÇÃO ====================
 function switchTab(tabName) {
-    // Esconder todos os conteúdos
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
+    // Esconde tudo
+    document.querySelectorAll('.tab-content').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('block');
+    });
     
-    // Remover classe active dos botões
+    // Reseta botões
     document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove('active', 'bg-red-900/20', 'border-red-600', 'text-white');
-        el.classList.add('border-transparent', 'text-gray-400');
+        el.classList.remove('active', 'bg-zinc-900', 'border-red-600', 'text-white');
+        el.classList.add('border-zinc-800', 'text-gray-400');
     });
 
-    // Mostrar aba selecionada
-    document.getElementById(`content-${tabName}`).classList.remove('hidden');
-    document.getElementById(`content-${tabName}`).classList.add('block');
+    // Mostra selecionado
+    const selected = document.getElementById(`content-${tabName}`);
+    if (selected) {
+        selected.classList.remove('hidden');
+        selected.classList.add('block');
+        
+        // Re-trigger animation
+        selected.style.animation = 'none';
+        selected.offsetHeight; /* trigger reflow */
+        selected.style.animation = null; 
+    }
     
-    // Ativar botão
+    // Ativa botão
     const btn = document.getElementById(`tab-${tabName}`);
-    btn.classList.add('active', 'bg-red-900/20', 'border-red-600', 'text-white');
-    btn.classList.remove('border-transparent', 'text-gray-400');
+    if (btn) {
+        btn.classList.add('active');
+        btn.classList.remove('border-zinc-800', 'text-gray-400');
+    }
 }
 
-// --- Calculadora de Martingale (Gale) ---
+// ==================== FORMATADORES ====================
+const formatMoney = (value) => {
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};
+
+// ==================== CALCULADORA GALE ====================
 function calcularGale() {
-    const entrada = parseFloat(document.getElementById('galeInput').value);
+    const input = document.getElementById('galeInput');
+    const entrada = parseFloat(input.value);
     
     if(!entrada || entrada <= 0) {
-        alert("Digite um valor de entrada válido!");
+        input.classList.add('border-red-500', 'animate-pulse');
+        setTimeout(() => input.classList.remove('border-red-500', 'animate-pulse'), 500);
         return;
     }
 
     const gale1 = entrada * 2;
     const gale2 = gale1 * 2;
 
-    document.getElementById('valEntrada').textContent = formatMoney(entrada);
-    document.getElementById('valGale1').textContent = formatMoney(gale1);
-    document.getElementById('valGale2').textContent = formatMoney(gale2);
+    document.getElementById('valEntrada').innerText = formatMoney(entrada);
+    document.getElementById('valGale1').innerText = formatMoney(gale1);
+    document.getElementById('valGale2').innerText = formatMoney(gale2);
     
-    document.getElementById('galeResult').classList.remove('hidden');
+    const resultArea = document.getElementById('galeResult');
+    resultArea.classList.remove('hidden');
+    resultArea.classList.add('animate-fade-in-down');
 }
 
-// --- Simulador de Banca (Lógica Financeira) ---
-const form = document.getElementById('simuladorForm');
+// ==================== SIMULADOR CORE ====================
+const simuladorForm = document.getElementById('simuladorForm');
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
+if (simuladorForm) {
+    simuladorForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-    // Inputs
-    const bancaInicial = parseFloat(document.getElementById('bancaInicial').value);
-    const taxaRisco = parseFloat(document.getElementById('perfilRisco').value); // 0.05 ou 0.10
-    const entradasDia = parseInt(document.getElementById('entradasDia').value);
-    let duracao = parseInt(document.getElementById('duracao').value);
-    const tipoPeriodo = document.getElementById('tipoPeriodo').value;
+        // 1. Coleta de Dados
+        const bancaInicial = parseFloat(document.getElementById('bancaInicial').value);
+        const taxaRisco = parseFloat(document.getElementById('perfilRisco').value); // 0.05 ou 0.10
+        const winsPorDia = parseInt(document.getElementById('entradasDia').value);
+        const sessoesPorDia = parseInt(document.getElementById('sessoesDia').value);
+        let duracao = parseInt(document.getElementById('duracao').value);
+        const tipoPeriodo = document.getElementById('tipoPeriodo').value;
 
-    if (tipoPeriodo === 'meses') duracao *= 30;
+        // Ajuste de Meses
+        if (tipoPeriodo === 'meses') duracao *= 30;
 
-    // Validação básica baseada no vídeo
-    if (bancaInicial < 50) {
-        alert("Atenção: A banca mínima recomendada é R$50,00 (Ideal: R$150,00).");
-    }
+        // Validações de Segurança
+        if (bancaInicial < 50) {
+            alert("⚠️ Atenção Jogador: Bancas abaixo de R$50,00 possuem risco crítico de quebra. Recomendamos iniciar com R$150,00.");
+        }
+        if (sessoesPorDia > winsPorDia) {
+            alert("⚠️ Erro de Lógica: Você não pode ter mais sessões do que vitórias. Aumente seus wins ou diminua as sessões.");
+            return;
+        }
 
-    // Cálculo da Mão Fixa (Baseado no vídeo: % da banca inicial)
-    // No vídeo ela diz: "Mão fixa = Porcentagem x Banca". 
-    // Opção conservadora: Se a banca cresce, a mão fixa aumenta? 
-    // O simulador geralmente assume Juros Compostos (mão fixa atualizada diariamente).
-    
-    let bancaAtual = bancaInicial;
-    let html = '';
-
-    // Loop dos Dias
-    for (let dia = 1; dia <= duracao; dia++) {
-        // Cálculo do valor da entrada para o dia (Juros Compostos Diários)
-        // Valor da entrada = Banca Atual * Taxa de Risco (ex: 5%)
-        let valorEntrada = bancaAtual * taxaRisco;
+        // 2. Cálculos Iniciais
+        let bancaAtual = bancaInicial;
+        let htmlTabela = '';
         
-        // Lucro do dia: Supondo que você acerte a meta (Ex: 3 a 5 wins líquidos)
-        // No vídeo ela diz para parar com a meta batida. 
-        // Vamos supor que a "Meta" seja ganhar o valor de 'entradasDia' vezes o valor da entrada.
-        // Ex: 5 entradas de R$7.50 = Lucro de R$37.50
+        // Mão Fixa (Baseada na banca inicial para não expor demais no começo)
+        const maoFixaInicial = bancaInicial * taxaRisco;
+
+        // 3. Loop de Projeção
+        for (let dia = 1; dia <= duracao; dia++) {
+            
+            // Recalcula entrada com base na banca atual (Juros Compostos)
+            let valorEntrada = bancaAtual * taxaRisco;
+            
+            // Lucro Bruto do Dia (Entrada * Wins)
+            let lucroDia = valorEntrada * winsPorDia;
+            
+            // Meta por Sessão
+            let metaPorSessao = lucroDia / sessoesPorDia;
+
+            let bancaAnterior = bancaAtual;
+            bancaAtual += lucroDia;
+
+            htmlTabela += `
+                <tr class="hover:bg-zinc-900 transition-colors border-b border-zinc-800/50 group">
+                    <td class="p-4 text-gray-300 font-medium group-hover:text-white">
+                        <span class="bg-zinc-800 text-xs px-2 py-1 rounded text-gray-400">Dia ${dia}</span>
+                    </td>
+                    <td class="p-4 text-gray-400">${formatMoney(bancaAnterior)}</td>
+                    
+                    <td class="p-4 text-center bg-red-900/5 border-x border-zinc-800/50">
+                        <div class="flex flex-col items-center">
+                            <span class="text-red-300 font-bold text-sm">${formatMoney(metaPorSessao)}</span>
+                            <span class="text-[10px] text-red-500/60 uppercase tracking-wide">x${sessoesPorDia} Sessões</span>
+                        </div>
+                    </td>
+                    
+                    <td class="p-4 text-right text-green-500 font-medium">+${formatMoney(lucroDia)}</td>
+                    <td class="p-4 text-right text-white font-bold text-lg">${formatMoney(bancaAtual)}</td>
+                </tr>
+            `;
+        }
+
+        // 4. Renderização
+        document.getElementById('tabelaResultados').innerHTML = htmlTabela;
         
-        let lucroDia = valorEntrada * entradasDia; 
+        // Cards de Resumo
+        animateValue(document.getElementById('resMaoFixa'), 0, maoFixaInicial, 1000);
+        animateValue(document.getElementById('resLucroTotal'), 0, bancaAtual - bancaInicial, 1500);
+        animateValue(document.getElementById('resBancaFinal'), 0, bancaAtual, 1500);
+
+        // Mostrar Resultados
+        const area = document.getElementById('resultadoArea');
+        area.classList.remove('hidden');
         
-        // Atualiza a banca
-        let bancaAnterior = bancaAtual;
-        bancaAtual += lucroDia;
+        // Scroll suave
+        setTimeout(() => {
+            area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    });
+}
 
-        html += `
-            <tr class="hover:bg-red-900/10 transition-colors border-b border-red-900/10">
-                <td class="p-4 font-bold text-red-400">Dia ${dia}</td>
-                <td class="p-4 text-gray-300">${formatMoney(bancaAnterior)}</td>
-                <td class="p-4 text-green-400 font-medium">+${formatMoney(lucroDia)} <span class="text-xs text-gray-500">(${entradasDia} wins)</span></td>
-                <td class="p-4 text-right font-bold text-white">${formatMoney(bancaAtual)}</td>
-            </tr>
-        `;
-    }
+// Função de Animação de Números
+function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const value = progress * (end - start) + start;
+        obj.innerHTML = formatMoney(value);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
 
-    // Renderizar
-    document.getElementById('tabelaResultados').innerHTML = html;
-    document.getElementById('resBancaFinal').innerText = formatMoney(bancaAtual);
-    document.getElementById('resLucroTotal').innerText = formatMoney(bancaAtual - bancaInicial);
-    
-    // Mostra qual seria a mão inicial recomendada
-    document.getElementById('resMaoFixa').innerText = formatMoney(bancaInicial * taxaRisco);
-
-    // Mostrar área de resultado
-    document.getElementById('resultadoArea').classList.remove('hidden');
-    document.getElementById('resultadoArea').scrollIntoView({ behavior: 'smooth' });
+// Inicialização
+window.addEventListener('load', () => {
+    switchTab('simulador'); // Abre no simulador
 });
-
-// Helper de Formatação
-function formatMoney(value) {
-    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}

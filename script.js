@@ -27,15 +27,7 @@ function switchTab(tabName) {
 }
 
 // ==================== HELPERS ====================
-// ALTERADO: Adicionado Math.round e configurações para remover casas decimais
-const formatMoney = (value) => {
-    return Math.round(value).toLocaleString('pt-BR', { 
-        style: 'currency', 
-        currency: 'BRL',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    });
-};
+const formatMoney = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 // ==================== CALCULADORA GALE ====================
 function calcularGale() {
@@ -140,7 +132,6 @@ function animateValue(obj, start, end, duration) {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const value = progress * (end - start) + start;
-        // A função formatMoney agora já arredonda, garantindo visual limpo durante a animação
         obj.innerHTML = formatMoney(value);
         if (progress < 1) window.requestAnimationFrame(step);
     };
